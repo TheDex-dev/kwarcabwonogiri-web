@@ -1,8 +1,9 @@
 {
   "name": "warcawonogiri",
+  "homepage": "https://thedex-dev.github.io/kwarcabwonogiri-web/",
   "version": "0.1.0",
   "private": true,
-  "scripts": {    
+  "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d out",
     "dev": "next dev --turbopack",
@@ -11,15 +12,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "gh-pages": "^6.3.0",
+    "next": "15.3.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.1"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4"
   }
 }
