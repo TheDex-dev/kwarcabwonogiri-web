@@ -10,8 +10,8 @@ export default function NewsPage() {
   const getFilteredArticles = () => {
     let filtered = [...articles];
     switch (filter) {
-      case 'Research':
-      case 'Analysis':
+      case 'Kegiatan':
+      case 'Berita':
         return filtered.filter(article => article.category === filter);
       case 'Most Read':
         return filtered.sort((a, b) => parseInt(b.readTime) - parseInt(a.readTime));
@@ -28,14 +28,14 @@ export default function NewsPage() {
         {/* Page Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4 dark:text-white">Latest News</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300">Stay informed with our latest academic articles and research updates</p>
+          <p className="text-xl text-gray-600 dark:text-gray-300">Stay informed with our latest updates and activities</p>
         </div>
 
         {/* Filters */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6 dark:text-white">Filter Articles</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Latest', 'Most Read', 'Research', 'Analysis'].map((filterName) => (
+            {['Latest', 'Most Read', 'Kegiatan', 'Berita'].map((filterName) => (
               <div 
                 key={filterName} 
                 onClick={() => setFilter(filterName)}
@@ -53,15 +53,14 @@ export default function NewsPage() {
 
         {/* News Articles Grid */}
         <section className="mb-16">
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {filteredArticles.slice(0, displayCount).map((article) => (
               <Link href={`/news/content/${article.id}`} key={article.id}>
-                <article className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-transform hover:-translate-y-1">
+                <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 transition-transform hover:-translate-y-1">
                   <div className="mb-4">
                     <span className={`text-sm ${
-                      article.category === 'Research' ? 'text-blue-600 dark:text-blue-400' :
-                      article.category === 'Analysis' ? 'text-green-600 dark:text-green-400' :
-                      article.category === 'Opinion' ? 'text-purple-600 dark:text-purple-400' :
+                      article.category === 'Kegiatan' ? 'text-blue-600 dark:text-blue-400' :
+                      article.category === 'Berita' ? 'text-green-600 dark:text-green-400' :
                       'text-orange-600 dark:text-orange-400'
                     }`}>{article.category}</span>
                     <h3 className="text-xl font-semibold mt-2 dark:text-white">{article.title}</h3>

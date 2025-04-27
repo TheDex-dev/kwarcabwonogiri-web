@@ -38,9 +38,8 @@ export default function ArticleContent({ params }) {
         {/* Article Header */}
         <div className="mb-12">
           <span className={`text-sm ${
-            article.category === 'Research' ? 'text-blue-600 dark:text-blue-400' :
-            article.category === 'Analysis' ? 'text-green-600 dark:text-green-400' :
-            article.category === 'Opinion' ? 'text-purple-600 dark:text-purple-400' :
+            article.category === 'Kegiatan' ? 'text-blue-600 dark:text-blue-400' :
+            article.category === 'Berita' ? 'text-green-600 dark:text-green-400' :
             'text-orange-600 dark:text-orange-400'
           }`}>{article.category}</span>
           <h1 className="text-4xl font-bold mt-4 mb-6 dark:text-white">{article.title}</h1>
@@ -52,7 +51,7 @@ export default function ArticleContent({ params }) {
         </div>
 
         {/* Article Content */}
-        <article className="prose prose-lg dark:prose-invert max-w-none mb-16">
+        <article className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-8">
           {article.content.split('\n\n').map((paragraph, index) => (
             <p key={index} className="text-gray-600 dark:text-gray-300 mb-6">
               {paragraph.startsWith('-') ? (
@@ -103,9 +102,8 @@ export default function ArticleContent({ params }) {
                 <Link href={`/news/content/${relatedArticle.id}`} key={relatedArticle.id}>
                   <article className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-transform hover:-translate-y-1">
                     <span className={`text-sm ${
-                      relatedArticle.category === 'Research' ? 'text-blue-600 dark:text-blue-400' :
-                      relatedArticle.category === 'Analysis' ? 'text-green-600 dark:text-green-400' :
-                      relatedArticle.category === 'Opinion' ? 'text-purple-600 dark:text-purple-400' :
+                      relatedArticle.category === 'Kegiatan' ? 'text-blue-600 dark:text-blue-400' :
+                      relatedArticle.category === 'Berita' ? 'text-green-600 dark:text-green-400' :
                       'text-orange-600 dark:text-orange-400'
                     }`}>{relatedArticle.category}</span>
                     <h3 className="text-xl font-semibold mt-2 mb-4 dark:text-white">{relatedArticle.title}</h3>

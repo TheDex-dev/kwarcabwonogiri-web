@@ -33,7 +33,7 @@ export default function Navigation() {
             </Link>
           </li>
           <li>
-            <Link href="/projects" className="hover:text-gray-600 border-b border-transparent hover:border-gray-600 transition-all">
+            <Link href="/profile" className="hover:text-gray-600 border-b border-transparent hover:border-gray-600 transition-all">
               Profil
             </Link>
           </li>

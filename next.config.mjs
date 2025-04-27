@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',
-    basePath: '/warcawonogiri',
+    trailingSlash: true,
+    basePath: '/kwarcabwonogiri-web',
     images: {
         unoptimized: true,
     },
