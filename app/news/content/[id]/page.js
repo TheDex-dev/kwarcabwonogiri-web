@@ -1,10 +1,14 @@
-'use client';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { articles } from '../../../data/articles';
 
-export default function ArticleContent() {
-  const params = useParams();
+// Add generateStaticParams to tell Next.js which paths to pre-render
+export function generateStaticParams() {
+  return articles.map((article) => ({
+    id: article.id,
+  }));
+}
+
+export default function ArticleContent({ params }) {
   const article = articles.find(a => a.id === params.id);
   
   if (!article) {
