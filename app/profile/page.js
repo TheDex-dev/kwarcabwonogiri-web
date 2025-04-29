@@ -1,26 +1,27 @@
+import Image from "next/image";
+
 export default function Profile() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
-        {/* Hero Section */}
-        <div className="text-center mb-20 animate-fade-in">
-          <h1 className="text-5xl font-bold mb-4 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
-            Profil Kwarcab Wonogiri
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-            Mengenal lebih dekat Gerakan Pramuka Kuartir Cabang Wonogiri
-          </p>
-          <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
-            <img 
-              src="/kwarcabwonogiri-web/images/profile.jpeg" 
-              alt="Kwarcab Wonogiri"
-              className="w-full h-auto"
-            />
+          <div className="text-center mb-20 animate-fade-in">
+            <h1 className="text-5xl font-bold mb-4 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+              Profil Kwarcab Wonogiri
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
+              Mengenal lebih dekat Gerakan Pramuka Kuartir Cabang Wonogiri
+            </p>
+            <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
+              <Image
+                src="/kwarcabwonogiri-web/images/profile.jpeg"
+                alt="Kwarcab Wonogiri"
+                width={800} 
+                height={450} 
+              />
+            </div>
           </div>
-        </div>
-
-        {/* Visi & Misi */}
+          {/* Visi & Misi */}
         <section className="mb-20">
           <h2 className="text-3xl font-bold mb-8 dark:text-white text-center">Visi & Misi</h2>
           <div className="grid gap-8 md:grid-cols-2">
@@ -65,8 +66,8 @@ export default function Profile() {
                 color: 'from-emerald-500 to-emerald-600'
               }
             ].map((program, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="bg-white/80 backdrop-blur-sm dark:bg-gray-800/80 rounded-xl shadow-lg p-8 transition-all duration-300 hover:-translate-y-2 group"
               >
                 <div className={`text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300`}>

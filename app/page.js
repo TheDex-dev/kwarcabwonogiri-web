@@ -1,9 +1,20 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
-import { articles } from "./data/articles";
+import { getLatestArticles } from "./firebase/articles";
 
 export default function Home() {
-  const featuredArticles = articles.slice(0, 2);
+  const [featuredArticles, setFeaturedArticles] = useState([]);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      const articles = await getLatestArticles(2);
+      setFeaturedArticles(articles);
+    }
+    fetchArticles();
+  }, []);
 
   return (
     <>
@@ -18,9 +29,9 @@ export default function Home() {
           loop
           playsInline
           controls={false}
-          poster="/kwarcabwonogiri-web/videos/sample.mp4?poster=true"
+          poster="/videos/sample.mp4?poster=true"
         >
-          <source src="/kwarcabwonogiri-web/videos/sample.mp4" type="video/mp4" />
+          <source src="/videos/sample.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
@@ -54,7 +65,7 @@ export default function Home() {
             <div className="w-full md:w-1/2">
               <div className="relative aspect-[4/3] w-full">
                 <Image
-                  src="/kwarcabwonogiri-web/images/hero0.jpeg"
+                  src="/images/hero0.jpeg"
                   alt="Kwarcab Activity"
                   fill
                   className="object-cover rounded-lg shadow-lg"
@@ -91,7 +102,7 @@ export default function Home() {
             <div className="w-full md:w-1/2">
               <div className="relative aspect-[4/3] w-full">
                 <Image
-                  src="/kwarcabwonogiri-web/images/hero1.jpeg"
+                  src="/images/hero1.jpeg"
                   alt="Pramuka Activities"
                   fill
                   className="object-cover rounded-lg shadow-lg"

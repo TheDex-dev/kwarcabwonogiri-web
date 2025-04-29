@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
-    trailingSlash: true,
-    basePath: '/kwarcabwonogiri-web',
+    output: 'standalone',
     images: {
         unoptimized: true,
+    },
+    experimental: {
+        serverActions: true,
     },
 };
 

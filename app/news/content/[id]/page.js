@@ -1,122 +1,180 @@
-import Link from 'next/link';
-import { articles } from '../../../data/articles';
+'use client';
 
-// Add generateStaticParams to tell Next.js which paths to pre-render
-export function generateStaticParams() {
-  return articles.map((article) => ({
-    id: article.id,
-  }));
-}
+import { useEffect, useState, Suspense } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { getArticleById } from '../../../firebase/articles';
 
-export default function ArticleContent({ params }) {
-  const article = articles.find(a => a.id === params.id);
-  
-  if (!article) {
+function ArticleContent() {
+  const { id } = useParams();
+  const router = useRouter();
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadArticle() {
+      try {
+        const articleData = await getArticleById(id);
+        setArticle(articleData);
+      } catch (error) {
+        console.error('Error loading article:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadArticle();
+  }, [id]);
+
+  // Format the date to be more readable
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Share article function
+  const shareArticle = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: article.title,
+          text: article.excerpt,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 dark:text-white">Article Not Found</h1>
-          <Link href="/news" className="text-blue-600 dark:text-blue-400 hover:underline">
-            Return to News
-          </Link>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-8"></div>
+          <div className="space-y-3">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
         </div>
       </div>
     );
   }
 
-  const currentIndex = articles.findIndex(a => a.id === params.id);
-  const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null;
-  const nextArticle = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
-
-  const relatedArticles = articles
-    .filter(a => a.id !== article.id && a.category === article.category)
-    .slice(0, 2);
+  if (!article) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24">
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-2xl font-bold mb-4 dark:text-white">Article not found</h1>
+          <p className="text-gray-600 dark:text-gray-300">The article you're looking for doesn't exist or has been removed.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
-        {/* Article Header */}
-        <div className="mb-12">
-          <span className={`text-sm ${
-            article.category === 'Kegiatan' ? 'text-blue-600 dark:text-blue-400' :
-            article.category === 'Berita' ? 'text-green-600 dark:text-green-400' :
-            'text-orange-600 dark:text-orange-400'
-          }`}>{article.category}</span>
-          <h1 className="text-4xl font-bold mt-4 mb-6 dark:text-white">{article.title}</h1>
-          <div className="flex items-center text-gray-600 dark:text-gray-300 mb-8">
-            <span>{article.date}</span>
-            <span className="mx-2">·</span>
+      {/* Back button */}
+      <button
+        onClick={() => router.back()}
+        className="fixed top-24 left-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </button>
+
+      {/* Hero Section with Image */}
+      <div className="relative h-[60vh] w-full overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src={article.imageUrl || "/images/hero0.jpeg"}
+            alt={article.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
+        </div>
+        
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 container mx-auto">
+          <span className="text-sm font-medium text-white bg-primary/80 px-4 py-1 rounded-full mb-6">
+            {article.category}
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white max-w-4xl">
+            {article.title}
+          </h1>
+          <div className="flex items-center space-x-4 text-gray-200">
+            <span>{formatDate(article.date)}</span>
+            <span>·</span>
             <span>{article.readTime}</span>
+            <button
+              onClick={shareArticle}
+              className="ml-4 p-2 hover:bg-white/10 rounded-full transition-colors"
+              title="Share article"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Article Content */}
-        <article className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-8">
-          {article.content.split('\n\n').map((paragraph, index) => (
-            <p key={index} className="text-gray-600 dark:text-gray-300 mb-6">
-              {paragraph.startsWith('-') ? (
-                <ul className="list-disc list-inside">
-                  {paragraph.split('\n').map((item, i) => (
-                    <li key={i} className="mb-2">{item.replace('- ', '')}</li>
-                  ))}
-                </ul>
-              ) : (
-                paragraph
-              )}
-            </p>
-          ))}
-        </article>
-
-        {/* Navigation Links */}
-        <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between items-center">
-            {prevArticle ? (
-              <Link 
-                href={`/news/content/${prevArticle.id}`}
-                className="px-6 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                ← {prevArticle.title}
-              </Link>
-            ) : (
-              <div />
-            )}
-            {nextArticle ? (
-              <Link 
-                href={`/news/content/${nextArticle.id}`}
-                className="px-6 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                {nextArticle.title} →
-              </Link>
-            ) : (
-              <div />
-            )}
-          </div>
-        </div>
-
-        {/* Related Articles */}
-        {relatedArticles.length > 0 && (
-          <section className="mt-16">
-            <h2 className="text-2xl font-semibold mb-8 dark:text-white">Related Articles</h2>
-            <div className="grid gap-8 md:grid-cols-2">
-              {relatedArticles.map(relatedArticle => (
-                <Link href={`/news/content/${relatedArticle.id}`} key={relatedArticle.id}>
-                  <article className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-transform hover:-translate-y-1">
-                    <span className={`text-sm ${
-                      relatedArticle.category === 'Kegiatan' ? 'text-blue-600 dark:text-blue-400' :
-                      relatedArticle.category === 'Berita' ? 'text-green-600 dark:text-green-400' :
-                      'text-orange-600 dark:text-orange-400'
-                    }`}>{relatedArticle.category}</span>
-                    <h3 className="text-xl font-semibold mt-2 mb-4 dark:text-white">{relatedArticle.title}</h3>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {relatedArticle.date} · {relatedArticle.readTime}
-                    </div>
-                  </article>
-                </Link>
-              ))}
+      {/* Article Content */}
+      <main className="container mx-auto px-4 py-12">
+        <article className="max-w-3xl mx-auto">
+          {/* Article excerpt/summary */}
+          {article.excerpt && (
+            <div className="mb-8 text-lg text-gray-600 dark:text-gray-300 font-serif border-l-4 border-primary pl-4">
+              {article.excerpt}
             </div>
-          </section>
-        )}
+          )}
+          
+          {/* Main content */}
+          <div className="prose prose-lg max-w-none dark:prose-invert">
+            {/* Split content by newlines and render paragraphs */}
+            {article.content.split('\n').map((paragraph, index) => (
+              paragraph.trim() && (
+                <p key={index} className="mb-4">
+                  {paragraph}
+                </p>
+              )
+            ))}
+          </div>
+
+          {/* Article footer */}
+          <footer className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Published on {formatDate(article.date)}
+              </div>
+              <button
+                onClick={shareArticle}
+                className="flex items-center space-x-2 text-primary hover:text-primary-dark transition-colors"
+              >
+                <span>Share Article</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+              </button>
+            </div>
+          </footer>
+        </article>
       </main>
     </div>
+  );
+}
+
+export default function ArticlePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ArticleContent />
+    </Suspense>
   );
 }

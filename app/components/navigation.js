@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +16,15 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // No need to redirect, AuthContext will handle the state
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${
@@ -46,10 +57,33 @@ export default function Navigation() {
           </button>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             <NavLink href="/" text="Beranda" isScrolled={isScrolled} />
             <NavLink href="/news" text="Berita" isScrolled={isScrolled} />
             <NavLink href="/profile" text="Profil" isScrolled={isScrolled} />
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className={`px-4 py-2 rounded-lg border-2 transition-colors ${
+                  isScrolled
+                    ? 'border-primary text-primary hover:bg-primary hover:text-white'
+                    : 'border-white text-white hover:bg-white hover:text-gray-900'
+                }`}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className={`px-4 py-2 rounded-lg border-2 transition-colors ${
+                  isScrolled
+                    ? 'border-primary text-primary hover:bg-primary hover:text-white'
+                    : 'border-white text-white hover:bg-white hover:text-gray-900'
+                }`}
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
 
@@ -63,9 +97,24 @@ export default function Navigation() {
               : 'bg-black/80 backdrop-blur-md text-white border-gray-700'
           }`}>
             <div className="space-y-3">
-              <MobileNavLink href="/" text="Home" onClick={() => setIsMenuOpen(false)} />
-              <MobileNavLink href="/news" text="News" onClick={() => setIsMenuOpen(false)} />
-              <MobileNavLink href="/profile" text="Profile" onClick={() => setIsMenuOpen(false)} />
+              <MobileNavLink href="/" text="Beranda" onClick={() => setIsMenuOpen(false)} />
+              <MobileNavLink href="/news" text="Berita" onClick={() => setIsMenuOpen(false)} />
+              <MobileNavLink href="/profile" text="Profil" onClick={() => setIsMenuOpen(false)} />
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                {user ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-lg hover:bg-white/10 rounded transition-colors"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <MobileNavLink href="/login" text="Login" onClick={() => setIsMenuOpen(false)} />
+                )}
+              </div>
             </div>
           </div>
         </div>
