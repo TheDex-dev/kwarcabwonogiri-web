@@ -71,7 +71,7 @@ function ArticleContent() {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24">
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-2xl font-bold mb-4 dark:text-white">Article not found</h1>
-          <p className="text-gray-600 dark:text-gray-300">The article you're looking for doesn't exist or has been removed.</p>
+          <p className="text-gray-600 dark:text-gray-300">The article you&apos;re looking for doesn&apos;t exist or has been removed.</p>
         </div>
       </div>
     );
