@@ -3,48 +3,132 @@ import Link from "next/link";
 import { articles } from "./data/articles";
 
 export default function Home() {
-  // Get the two most recent articles for the featured section
   const featuredArticles = articles.slice(0, 2);
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold mb-4 dark:text-white">Kwarcab Wonogiri</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">Gerakan Pramuka Kuartir Cabang Wonogiri</p>
-            <div className="relative w-full max-w-3xl mx-auto rounded-xl overflow-hidden shadow-lg">
-              <video 
-                className="w-full h-auto"
-                width="1920"
-                height="1080"
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls
-                poster="/kwarcabwonogiri-web/videos/sample.mp4?poster=true"
-              >
-                <source src="/kwarcabwonogiri-web/videos/sample.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+      {/* Hero Section */}
+      <div className="relative h-screen w-full overflow-hidden">
+        <video 
+          className="absolute top-0 left-0 w-full h-full object-cover transform scale-105"
+          width="1920"
+          height="1080"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          poster="/kwarcabwonogiri-web/videos/sample.mp4?poster=true"
+        >
+          <source src="/kwarcabwonogiri-web/videos/sample.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
+        
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 animate-fade-in">
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 text-white drop-shadow-lg tracking-tight">
+            Kwarcab Wonogiri
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-200 drop-shadow-lg max-w-3xl font-light leading-relaxed">
+            Gerakan Pramuka Kuartir Cabang Wonogiri
+          </p>
+          <a href="#featured" className="mt-8 btn-primary">
+            Explore More
+          </a>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <svg className="w-6 h-6 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </div>
+      </div>
+
+      {/* Left-Right Sections */}
+      <section className="py-20 bg-white dark:bg-gray-800">
+        <div className="container-custom">
+          {/* Left Image, Right Text Section */}
+          <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
+            <div className="w-full md:w-1/2">
+              <div className="relative aspect-[4/3] w-full">
+                <Image
+                  src="/images/profile.jpeg"
+                  alt="Kwarcab Activity"
+                  fill
+                  className="object-cover rounded-lg shadow-lg"
+                />
+              </div>
+            </div>
+            <div className="w-full md:w-1/2">
+              <h2 className="text-3xl font-bold mb-4 dark:text-white">Our Mission</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Membentuk kader bangsa yang berkarakter, berjiwa patriot, dan memiliki 
+                kepedulian terhadap sesama serta lingkungan. Melalui berbagai kegiatan 
+                kepramukaan, kami mempersiapkan generasi muda untuk menjadi pemimpin masa depan.
+              </p>
+              <Link href="/profile" className="btn-primary inline-block">
+                Learn More
+              </Link>
             </div>
           </div>
 
-          {/* Featured Posts */}
+          {/* Right Image, Left Text Section */}
+          <div className="flex flex-col-reverse md:flex-row items-center gap-12">
+            <div className="w-full md:w-1/2">
+              <h2 className="text-3xl font-bold mb-4 dark:text-white">Our Activities</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Kami mengadakan berbagai kegiatan yang mendukung pengembangan karakter, 
+                keterampilan kepramukaan, dan jiwa kepemimpinan. Mulai dari kegiatan rutin 
+                mingguan hingga event-event besar tahunan yang melibatkan seluruh anggota 
+                Pramuka di Wonogiri.
+              </p>
+              <Link href="/news" className="btn-primary inline-block">
+                View Activities
+              </Link>
+            </div>
+            <div className="w-full md:w-1/2">
+              <div className="relative aspect-[4/3] w-full">
+                <Image
+                  src="/images/profile.jpeg"
+                  alt="Pramuka Activities"
+                  fill
+                  className="object-cover rounded-lg shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Section */}
+      <div id="featured" className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <main className="container-custom py-20">
           <section className="mb-16">
-            <h2 className="text-2xl font-semibold mb-6 dark:text-white">Featured Articles</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4 dark:text-white">Featured Articles</h2>
+              <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+            </div>
+            
             <div className="grid gap-8 md:grid-cols-2">
               {featuredArticles.map((article) => (
-                <Link href={`/news/content/${article.id}`} key={article.id}>
-                  <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 transition-transform hover:-translate-y-1">
+                <Link href={`/news/content/${article.id}`} key={article.id} className="group">
+                  <article className="card p-6 h-full transform transition-all duration-300 group-hover:-translate-y-2">
                     <div className="mb-4">
-                      <span className="text-sm text-blue-600 dark:text-blue-400">{article.category}</span>
-                      <h3 className="text-xl font-semibold mt-2 dark:text-white">{article.title}</h3>
+                      <span className="inline-block px-3 py-1 text-sm font-medium text-primary bg-primary/10 rounded-full">
+                        {article.category}
+                      </span>
+                      <h3 className="text-2xl font-semibold mt-3 dark:text-white group-hover:text-primary transition-colors">
+                        {article.title}
+                      </h3>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{article.excerpt}</p>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">{article.date} · {article.readTime}</div>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{article.excerpt}</p>
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <span>{article.date}</span>
+                      <span className="mx-2">·</span>
+                      <span>{article.readTime}</span>
+                    </div>
                   </article>
                 </Link>
               ))}

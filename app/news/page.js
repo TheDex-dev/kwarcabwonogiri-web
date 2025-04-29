@@ -13,7 +13,7 @@ export default function NewsPage() {
       case 'Kegiatan':
       case 'Berita':
         return filtered.filter(article => article.category === filter);
-      case 'Most Read':
+      case 'Populer':
         return filtered.sort((a, b) => parseInt(b.readTime) - parseInt(a.readTime));
       default: // Latest
         return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -35,7 +35,7 @@ export default function NewsPage() {
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6 dark:text-white">Filter Articles</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['Latest', 'Most Read', 'Kegiatan', 'Berita'].map((filterName) => (
+            {['Terbaru', 'Populer', 'Kegiatan', 'Berita'].map((filterName) => (
               <div 
                 key={filterName} 
                 onClick={() => setFilter(filterName)}

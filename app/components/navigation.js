@@ -5,40 +5,98 @@ import { useState, useEffect } from 'react';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 20);
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-black/50 backdrop-blur-sm' : 'bg-transparent'
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-200 dark:border-gray-800' 
+        : 'bg-black/30 backdrop-blur-sm'
     }`}>
-      <div className="max-w-4xl mx-auto px-4 py-4">
-        <ul className="flex justify-center space-x-8">
-          <li>
-            <Link href="/" className="hover:text-gray-600 border-b border-transparent hover:border-gray-600 transition-all">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/news" className="hover:text-gray-600 border-b border-transparent hover:border-gray-600 transition-all">
-              Berita
-            </Link>
-          </li>
-          <li>
-            <Link href="/profile" className="hover:text-gray-600 border-b border-transparent hover:border-gray-600 transition-all">
-              Profil
-            </Link>
-          </li>
-        </ul>
+      <div className="container-custom">
+        <div className="flex items-center justify-between h-16">
+          <Link href="/" className={`text-2xl font-bold tracking-tight transition-colors ${
+            isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'
+          }`}>
+            Kwarcab
+          </Link>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={`md:hidden p-2 rounded-lg transition-colors ${
+              isScrolled ? 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800' : 'text-white hover:bg-white/10'
+            }`}
+          >
+            <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              {isMenuOpen ? (
+                <path d="M6 18L18 6M6 6l12 12"></path>
+              ) : (
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+              )}
+            </svg>
+          </button>
+
+          {/* Desktop menu */}
+          <div className="hidden md:flex space-x-8">
+            <NavLink href="/" text="Home" isScrolled={isScrolled} />
+            <NavLink href="/news" text="News" isScrolled={isScrolled} />
+            <NavLink href="/profile" text="Profile" isScrolled={isScrolled} />
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <div className={`md:hidden transition-all duration-300 ${
+          isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+        } overflow-hidden`}>
+          <div className={`mx-2 mb-2 p-4 rounded-lg shadow-lg border ${
+            isScrolled 
+              ? 'bg-white/95 dark:bg-gray-800/95 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700' 
+              : 'bg-black/80 backdrop-blur-md text-white border-gray-700'
+          }`}>
+            <div className="space-y-3">
+              <MobileNavLink href="/" text="Home" onClick={() => setIsMenuOpen(false)} />
+              <MobileNavLink href="/news" text="News" onClick={() => setIsMenuOpen(false)} />
+              <MobileNavLink href="/profile" text="Profile" onClick={() => setIsMenuOpen(false)} />
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
+  );
+}
+
+function NavLink({ href, text, isScrolled }) {
+  return (
+    <Link
+      href={href}
+      className={`transition-colors relative group ${
+        isScrolled ? 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white' 
+        : 'text-gray-200 hover:text-white'
+      }`}
+    >
+      {text}
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, text, onClick }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="block px-4 py-2 text-lg hover:bg-white/10 rounded transition-colors"
+    >
+      {text}
+    </Link>
   );
 }
