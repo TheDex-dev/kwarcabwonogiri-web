@@ -45,7 +45,7 @@ export default function Home() {
             Gerakan Pramuka Kuartir Cabang Wonogiri
           </p>
           <a href="#featured" className="mt-8 btn-primary">
-            Explore More
+            Pelajari Lebih Jauh
           </a>
         </div>
 
