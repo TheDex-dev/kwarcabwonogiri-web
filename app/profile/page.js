@@ -14,7 +14,7 @@ export default function Profile() {
             <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
               <Image
-                src="/kwarcabwonogiri-web/images/profile.jpeg"
+                src="/images/profile.jpeg"
                 alt="Kwarcab Wonogiri"
                 width={800} 
                 height={450} 
