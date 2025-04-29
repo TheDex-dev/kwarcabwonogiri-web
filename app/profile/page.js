@@ -48,22 +48,22 @@ export default function Profile() {
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                title: 'Pelatihan Kepemimpinan',
-                description: 'Program pengembangan jiwa kepemimpinan bagi anggota pramuka',
-                icon: '👥',
-                color: 'from-blue-500 to-blue-600'
+                title: "Pelatihan Kepemimpinan",
+                description: "Program pengembangan jiwa kepemimpinan bagi anggota pramuka",
+                icon: "👥",
+                color: "from-blue-500 to-blue-600"
               },
               {
-                title: 'Bakti Sosial',
-                description: 'Kegiatan sosial untuk membantu masyarakat sekitar',
-                icon: '🤝',
-                color: 'from-green-500 to-green-600'
+                title: "Bakti Sosial",
+                description: "Kegiatan sosial untuk membantu masyarakat sekitar",
+                icon: "🤝",
+                color: "from-green-500 to-green-600"
               },
               {
-                title: 'Pendidikan Lingkungan',
-                description: 'Program pelestarian dan pendidikan lingkungan hidup',
-                icon: '🌱',
-                color: 'from-emerald-500 to-emerald-600'
+                title: "Pendidikan Lingkungan",
+                description: "Program pelestarian dan pendidikan lingkungan hidup",
+                icon: "🌱",
+                color: "from-emerald-500 to-emerald-600"
               }
             ].map((program, idx) => (
               <div
