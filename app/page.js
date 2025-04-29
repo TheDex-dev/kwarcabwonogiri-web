@@ -54,7 +54,7 @@ export default function Home() {
             <div className="w-full md:w-1/2">
               <div className="relative aspect-[4/3] w-full">
                 <Image
-                  src="/images/profile.jpeg"
+                  src="/kwarcabwonogiri-web/images/hero0.jpeg"
                   alt="Kwarcab Activity"
                   fill
                   className="object-cover rounded-lg shadow-lg"
@@ -91,7 +91,7 @@ export default function Home() {
             <div className="w-full md:w-1/2">
               <div className="relative aspect-[4/3] w-full">
                 <Image
-                  src="/images/profile.jpeg"
+                  src="/kwarcabwonogiri-web/images/hero1.jpeg"
                   alt="Pramuka Activities"
                   fill
                   className="object-cover rounded-lg shadow-lg"

@@ -47,9 +47,9 @@ export default function Navigation() {
 
           {/* Desktop menu */}
           <div className="hidden md:flex space-x-8">
-            <NavLink href="/" text="Home" isScrolled={isScrolled} />
-            <NavLink href="/news" text="News" isScrolled={isScrolled} />
-            <NavLink href="/profile" text="Profile" isScrolled={isScrolled} />
+            <NavLink href="/" text="Beranda" isScrolled={isScrolled} />
+            <NavLink href="/news" text="Berita" isScrolled={isScrolled} />
+            <NavLink href="/profile" text="Profil" isScrolled={isScrolled} />
           </div>
         </div>
 
