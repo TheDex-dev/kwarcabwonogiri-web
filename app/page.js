@@ -58,8 +58,17 @@ export default function Home() {
       </div>
 
       {/* Left-Right Sections */}
-      <section className="py-20 bg-white dark:bg-gray-800">
-        <div className="container-custom">
+      <section className="relative py-20 bg-white dark:bg-gray-800">
+        <div className="absolute inset-0 w-full h-full z-0">
+          <Image
+            src="/background/darkmode-waves.svg"
+            alt="Wave Background"
+            fill
+            className="object-cover rotate-180"
+            priority
+          />
+        </div>
+        <div className="container-custom relative z-10">
           {/* Left Image, Right Text Section */}
           <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
             <div className="w-full md:w-1/2">
@@ -114,11 +123,20 @@ export default function Home() {
       </section>
 
       {/* Featured Section */}
-      <div id="featured" className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <main className="container-custom py-20">
+      <div id="featured" className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div className="absolute inset-0 w-full h-full z-0">
+          <Image
+            src="/background/darkmode-waves.svg"
+            alt="Wave Background"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <main className="container-custom py-20 relative z-10">
           <section className="mb-16">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">Featured Articles</h2>
+              <h2 className="text-4xl font-bold mb-4 text-white">Featured Articles</h2>
               <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
             </div>
             

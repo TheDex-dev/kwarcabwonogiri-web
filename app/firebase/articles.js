@@ -1,6 +1,6 @@
 'use client';
 
-import { collection, getDocs, getDoc, doc, query, orderBy, limit, where } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc } from 'firebase/firestore';
 import { db } from './config';
 
 const COLLECTION_NAME = 'articles';
@@ -70,5 +70,19 @@ export async function getArticlesByCategory(category) {
   } catch (error) {
     console.error('Error fetching articles by category:', error);
     return [];
+  }
+}
+
+export async function addArticle(articleData) {
+  try {
+    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+      ...articleData,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    return { id: docRef.id, ...articleData };
+  } catch (error) {
+    console.error('Error adding article:', error);
+    throw error;
   }
 }

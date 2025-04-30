@@ -3,7 +3,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/navigation";
-import CreateArticleButton from "./components/CreateArticleButton";
+import CreateContentButton from "./components/CreateContentButton";
 import { AuthContextProvider } from "./context/AuthContext";
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
           <AuthContextProvider>
             <Navigation />
             {children}
-            <CreateArticleButton />
+            <CreateContentButton />
           </AuthContextProvider>
         </ErrorBoundary>
       </body>
