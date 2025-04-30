@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getEventsByType } from '../../firebase/events';
 import CreateContentButton from '../../components/CreateContentButton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SiagaPage() {
   const [events, setEvents] = useState([]);
@@ -114,6 +115,26 @@ export default function SiagaPage() {
     }
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -131,17 +152,30 @@ export default function SiagaPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="space-y-8"
+    >
+      <motion.div 
+        variants={itemVariants}
+        className="text-center"
+      >
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Kegiatan Siaga</h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Program kegiatan untuk anggota Pramuka tingkat Siaga di Kwartir Cabang Wonogiri
         </p>
-      </div>
+      </motion.div>
 
-      {renderEventCountSummary()}
+      <motion.div variants={itemVariants}>
+        {renderEventCountSummary()}
+      </motion.div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col md:flex-row gap-4 mb-8"
+      >
         <div className="flex-1">
           <input
             type="text"
@@ -170,95 +204,120 @@ export default function SiagaPage() {
             <option key={category} value={category}>{category}</option>
           ))}
         </select>
-      </div>
+      </motion.div>
 
-      {filteredEvents.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600 dark:text-gray-400">No events found matching your criteria.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEvents.map((event) => (
-            <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-              <div className="aspect-w-16 aspect-h-9">
-                <img 
-                  src={event.image} 
-                  alt={event.title}
-                  className="object-cover w-full h-48"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {event.title}
-                  </h3>
-                  {new Date(event.date) >= new Date() && (
-                    <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                      Upcoming
+      <AnimatePresence mode="wait">
+        {filteredEvents.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-center py-12"
+          >
+            <p className="text-gray-600 dark:text-gray-400">No events found matching your criteria.</p>
+          </motion.div>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {filteredEvents.map((event) => (
+              <motion.div
+                key={event.id}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+              >
+                <div className="aspect-w-16 aspect-h-9">
+                  <img 
+                    src={event.image} 
+                    alt={event.title}
+                    className="object-cover w-full h-48"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {event.title}
+                    </h3>
+                    {new Date(event.date) >= new Date() && (
+                      <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                        Upcoming
+                      </span>
+                    )}
+                  </div>
+                  {event.category && (
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 mb-2">
+                      {event.category}
                     </span>
                   )}
-                </div>
-                {event.category && (
-                  <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 mb-2">
-                    {event.category}
-                  </span>
-                )}
-                {event.targetAudience && event.targetAudience.length > 0 && (
-                  <div className="mb-2">
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
-                      Target: {getTargetAudienceLabels(event.targetAudience)}
-                    </span>
+                  {event.targetAudience && event.targetAudience.length > 0 && (
+                    <div className="mb-2">
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        Target: {getTargetAudienceLabels(event.targetAudience)}
+                      </span>
+                    </div>
+                  )}
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    {event.description}
+                  </p>
+                  <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <p>📅 {new Date(event.date).toLocaleDateString('id-ID', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</p>
+                    <p>📍 {event.location}</p>
+                    {event.capacity && <p>👥 Capacity: {event.capacity} participants</p>}
                   </div>
-                )}
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {event.description}
-                </p>
-                <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                  <p>📅 {new Date(event.date).toLocaleDateString('id-ID', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</p>
-                  <p>📍 {event.location}</p>
-                  {event.capacity && <p>👥 Capacity: {event.capacity} participants</p>}
+                  {event.registrationLink && (
+                    <a
+                      href={event.registrationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-block bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors"
+                    >
+                      Register Now
+                    </a>
+                  )}
+                  <div className="mt-4 flex justify-between items-center">
+                    <button
+                      onClick={() => shareEvent(event)}
+                      className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                      Share Event
+                    </button>
+                    <button
+                      onClick={() => setSelectedEvent(event)}
+                      className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
-                {event.registrationLink && (
-                  <a
-                    href={event.registrationLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-block bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors"
-                  >
-                    Register Now
-                  </a>
-                )}
-                <div className="mt-4 flex justify-between items-center">
-                  <button
-                    onClick={() => shareEvent(event)}
-                    className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                    </svg>
-                    Share Event
-                  </button>
-                  <button
-                    onClick={() => setSelectedEvent(event)}
-                    className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
-                  >
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {selectedEvent && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto"
+          >
             <div className="flex justify-between items-start mb-4">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{selectedEvent.title}</h2>
               <button
@@ -313,11 +372,11 @@ export default function SiagaPage() {
                 )}
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
 
       <CreateContentButton eventType="siaga" />
-    </div>
+    </motion.div>
   );
 }

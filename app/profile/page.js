@@ -2,8 +2,30 @@ import Image from "next/image";
 
 export default function Profile() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+      {/* Left side background */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 opacity-30 dark:opacity-20">
+        <Image
+          src="/background/side-by-side stacked.svg"
+          alt="Background decoration"
+          width={500}
+          height={800}
+          className="w-auto h-auto"
+        />
+      </div>
+      
+      {/* Right side background */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 opacity-30 dark:opacity-20">
+        <Image
+          src="/background/side-by-side stacked.svg"
+          alt="Background decoration"
+          width={500}
+          height={800}
+          className="w-auto h-auto transform rotate-180"
+        />
+      </div>
+
+      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12 relative z-10">
           <div className="text-center mb-20 animate-fade-in">
             <h1 className="text-5xl font-bold mb-4 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
               Profil Kwarcab Wonogiri

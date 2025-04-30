@@ -6,6 +6,7 @@ import Navigation from "./components/navigation";
 import CreateContentButton from "./components/CreateContentButton";
 import { AuthContextProvider } from "./context/AuthContext";
 import { ErrorBoundary } from 'react-error-boundary';
+import { AnimatePresence } from 'framer-motion';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,9 @@ export default function RootLayout({ children }) {
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <AuthContextProvider>
             <Navigation />
-            {children}
+            <AnimatePresence mode="wait">
+              {children}
+            </AnimatePresence>
             <CreateContentButton />
           </AuthContextProvider>
         </ErrorBoundary>

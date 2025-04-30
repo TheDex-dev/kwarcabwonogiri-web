@@ -56,13 +56,13 @@ export default function NewsPage() {
           src="/background/lightmode-blob.svg"
           alt="Background Light"
           fill
-          className="object-cover opacity-50 dark:opacity-0 transition-opacity duration-300"
+          className="object-cover block dark:hidden transition-all duration-300"
         />
         <Image
           src="/background/darkmode-blob.svg"
           alt="Background Dark"
           fill
-          className="object-cover opacity-0 dark:opacity-50 transition-opacity duration-300"
+          className="object-cover hidden dark:block transition-all duration-300"
         />
       </div>
 
