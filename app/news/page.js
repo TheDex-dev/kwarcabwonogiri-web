@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getAllArticles } from '../firebase/articles';
 
 export default function NewsPage() {
@@ -48,8 +49,24 @@ export default function NewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+      {/* Background Images */}
+      <div className="absolute inset-0 w-full h-full">
+        <Image
+          src="/background/lightmode-blob.svg"
+          alt="Background Light"
+          fill
+          className="object-cover opacity-50 dark:opacity-0 transition-opacity duration-300"
+        />
+        <Image
+          src="/background/darkmode-blob.svg"
+          alt="Background Dark"
+          fill
+          className="object-cover opacity-0 dark:opacity-50 transition-opacity duration-300"
+        />
+      </div>
+
+      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12 relative z-10">
         {/* Page Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4 dark:text-white">Latest News</h1>

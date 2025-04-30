@@ -61,10 +61,17 @@ export default function Home() {
       <section className="relative py-20 bg-white dark:bg-gray-800">
         <div className="absolute inset-0 w-full h-full z-0">
           <Image
+            src="/background/lightmode-waves.svg"
+            alt="Wave Background"
+            fill
+            className="object-cover rotate-180 dark:hidden"
+            priority
+          />
+          <Image
             src="/background/darkmode-waves.svg"
             alt="Wave Background"
             fill
-            className="object-cover rotate-180"
+            className="object-cover rotate-180 hidden dark:block"
             priority
           />
         </div>
@@ -126,10 +133,17 @@ export default function Home() {
       <div id="featured" className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="absolute inset-0 w-full h-full z-0">
           <Image
+            src="/background/lightmode-waves.svg"
+            alt="Wave Background"
+            fill
+            className="object-cover dark:hidden"
+            priority
+          />
+          <Image
             src="/background/darkmode-waves.svg"
             alt="Wave Background"
             fill
-            className="object-cover"
+            className="object-cover hidden dark:block"
             priority
           />
         </div>
