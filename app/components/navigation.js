@@ -38,7 +38,7 @@ export default function Navigation() {
           <Link href="/" className={`text-2xl font-bold tracking-tight transition-colors ${
             isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'
           }`}>
-            Kwarcab
+            Kwarcab Wonogiri
           </Link>
 
           {/* Mobile menu button */}
@@ -144,7 +144,7 @@ export default function Navigation() {
 
         {/* Mobile menu */}
         <div className={`md:hidden transition-all duration-300 ${
-          isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+          isMenuOpen ? 'max-h-128 opacity-100' : 'max-h-0 opacity-0'
         } overflow-hidden`}>
           <div className={`mx-2 mb-2 p-4 rounded-lg shadow-lg border ${
             isScrolled 

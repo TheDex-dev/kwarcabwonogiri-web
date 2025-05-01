@@ -58,7 +58,7 @@ export default function Home() {
             transition={{ delay: 0.5, duration: 0.8 }}
             className="text-xl md:text-2xl text-gray-200 drop-shadow-lg max-w-3xl font-light leading-relaxed"
           >
-            Gerakan Pramuka Kuartir Cabang Wonogiri
+            Gerakan Pramuka Kwartir Cabang Wonogiri
           </motion.p>
           <motion.a 
             initial={{ opacity: 0, y: 20 }}
