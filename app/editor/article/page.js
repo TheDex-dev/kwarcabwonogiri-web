@@ -25,16 +25,14 @@ export default function ArticleEditor() {
     imageUrl: ''
   });
 
-  // Protect the route - redirect if not admin
-  if (!user) {
-    router.push('/login');
-    return null;
-  }
-
-  // Fetch articles on component mount
   useEffect(() => {
+    // Check auth and fetch articles
+    if (!user) {
+      router.push('/login');
+      return;
+    }
     fetchArticles();
-  }, []);
+  }, [user, router]);
 
   const fetchArticles = async () => {
     try {

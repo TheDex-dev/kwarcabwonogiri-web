@@ -38,16 +38,14 @@ export default function EventEditor() {
     targetAudience: []
   });
 
-  // Protect the route - redirect if not admin
-  if (!user) {
-    router.push('/login');
-    return null;
-  }
-
-  // Fetch events on component mount
   useEffect(() => {
+    // Check auth and fetch events
+    if (!user) {
+      router.push('/login');
+      return;
+    }
     fetchEvents();
-  }, []);
+  }, [user, router]);
 
   const fetchEvents = async () => {
     try {
