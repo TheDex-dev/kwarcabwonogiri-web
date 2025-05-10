@@ -46,6 +46,7 @@ export default function RootLayout({ children }) {
               {children}
             </AnimatePresence>
             <CreateContentButton />
+            <Analytics />
           </AuthContextProvider>
         </ErrorBoundary>
       </body>
