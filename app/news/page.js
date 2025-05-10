@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getAllArticles } from '../firebase/articles';
+import { getArticles } from '../firebase/articles';
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
@@ -13,7 +13,7 @@ export default function NewsPage() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const data = await getAllArticles();
+        const data = await getArticles();
         setArticles(data);
       } catch (error) {
         console.error('Error fetching articles:', error);

@@ -98,6 +98,10 @@ function ArticleContent() {
             fill
             className="object-cover"
             priority
+            onError={(e) => {
+              console.error('Error loading image:', e);
+              e.target.src = "/images/hero0.jpeg";
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
         </div>

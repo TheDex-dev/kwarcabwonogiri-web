@@ -1,13 +1,23 @@
 'use client';
 
-import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './config';
 
 const COLLECTION_NAME = 'articles';
 
-export async function getAllArticles() {
+export async function getArticles(options = {}) {
   try {
-    const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+    let q = collection(db, COLLECTION_NAME);
+    
+    if (options.category) {
+      q = query(q, where('category', '==', options.category));
+    }
+    
+    if (options.limit) {
+      q = query(q, orderBy('date', 'desc'), limit(options.limit));
+    }
+    
+    const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -37,40 +47,11 @@ export async function getArticleById(id) {
 }
 
 export async function getLatestArticles(count = 4) {
-  try {
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      orderBy('date', 'desc'),
-      limit(count)
-    );
-    
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-  } catch (error) {
-    console.error('Error fetching latest articles:', error);
-    return [];
-  }
+  return getArticles({ limit: count });
 }
 
 export async function getArticlesByCategory(category) {
-  try {
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      where('category', '==', category)
-    );
-    
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-  } catch (error) {
-    console.error('Error fetching articles by category:', error);
-    return [];
-  }
+  return getArticles({ category });
 }
 
 export async function addArticle(articleData) {
@@ -86,3 +67,24 @@ export async function addArticle(articleData) {
     throw error;
   }
 }
+
+export const updateArticle = async (articleId, articleData) => {
+  try {
+    const articleRef = doc(db, COLLECTION_NAME, articleId);
+    await updateDoc(articleRef, articleData);
+  } catch (error) {
+    console.error('Error updating article:', error);
+    throw error;
+  }
+};
+
+export const deleteArticle = async (articleId) => {
+  try {
+    const articleRef = doc(db, COLLECTION_NAME, articleId);
+    await deleteDoc(articleRef);
+  } catch (error) {
+    console.error('Error deleting article:', error);
+    throw error;
+  }
+};
+

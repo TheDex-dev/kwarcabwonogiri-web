@@ -1,6 +1,6 @@
 'use client';
 
-import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './config';
 
 const COLLECTION_NAME = 'events';
@@ -75,3 +75,37 @@ export async function addEvent(eventData) {
     throw error;
   }
 }
+
+export const updateEvent = async (eventId, eventData) => {
+  try {
+    const eventRef = doc(db, 'events', eventId);
+    await updateDoc(eventRef, eventData);
+  } catch (error) {
+    console.error('Error updating event:', error);
+    throw error;
+  }
+};
+
+export const deleteEvent = async (eventId) => {
+  try {
+    const eventRef = doc(db, 'events', eventId);
+    await deleteDoc(eventRef);
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    throw error;
+  }
+};
+
+export const getEvents = async () => {
+  try {
+    const eventsCollection = collection(db, 'events');
+    const eventsSnapshot = await getDocs(eventsCollection);
+    return eventsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error getting events:', error);
+    throw error;
+  }
+};
