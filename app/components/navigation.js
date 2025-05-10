@@ -115,6 +115,7 @@ export default function Navigation() {
                 </Link>
               </div>
             </div>
+            <NavLink href="/gallery" text="Galeri" isScrolled={isScrolled} />
             <NavLink href="/profile" text="Profil" isScrolled={isScrolled} />
             {user ? (
               <button
@@ -163,6 +164,7 @@ export default function Navigation() {
                   <MobileNavLink href="/events/pandega" text="Pandega" onClick={() => setIsMenuOpen(false)} />
                 </div>
               </div>
+              <MobileNavLink href="/gallery" text="Galeri" onClick={() => setIsMenuOpen(false)} />
               <MobileNavLink href="/profile" text="Profil" onClick={() => setIsMenuOpen(false)} />
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 {user ? (
