@@ -1,3 +1,5 @@
+'use client';
+
 import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './config';
 
@@ -30,9 +32,6 @@ export async function getEventsByTypeServer(type) {
     return [];
   }
 }
-
-// Client-side functions
-'use client';
 
 export async function getAllEvents() {
   try {
