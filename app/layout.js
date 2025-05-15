@@ -19,11 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const metadata = {
-  title: "Kwarcab Wonogiri",
-  description: "Situs resmi Kwartir Cabang Wonogiri",
-};
-
 function ErrorFallback({error}) {
   return (
     <div className="min-h-screen flex items-center justify-center">
