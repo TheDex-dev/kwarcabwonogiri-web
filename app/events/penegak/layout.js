@@ -1,10 +1,10 @@
-import { getEventsByType } from '../../firebase/events';
+import { getEventsByTypeServer } from '../../firebase/events';
 
 export const dynamicParams = true;
 export const revalidate = 60; // Revalidate metadata every 60 seconds
 
 export async function generateMetadata() {
-  const events = await getEventsByType('penegak');
+  const events = await getEventsByTypeServer('penegak');
   const upcomingEvents = events.filter(event => new Date(event.date) >= new Date());
 
   return {

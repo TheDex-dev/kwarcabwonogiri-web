@@ -1,9 +1,29 @@
-'use client';
-
 import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './config';
 
 const COLLECTION_NAME = 'articles';
+
+// Server-side article fetching
+export async function getArticleServer(id) {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return {
+        id: docSnap.id,
+        ...docSnap.data()
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    return null;
+  }
+}
+
+// Client-side functions
+'use client';
 
 export async function getArticles(options = {}) {
   try {

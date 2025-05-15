@@ -1,9 +1,38 @@
-'use client';
-
 import { collection, getDocs, getDoc, doc, query, orderBy, limit, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './config';
 
 const COLLECTION_NAME = 'events';
+
+// Common filtering logic
+const filterEventsByType = (events, type) => {
+  return events.filter(event => 
+    event.type === type || 
+    (event.targetAudience && 
+     Array.isArray(event.targetAudience) && 
+     event.targetAudience.includes(type))
+  ).sort((a, b) => new Date(b.date) - new Date(a.date));
+};
+
+// Server-side event fetching
+export async function getEventsByTypeServer(type) {
+  try {
+    const eventsRef = collection(db, COLLECTION_NAME);
+    const querySnapshot = await getDocs(eventsRef);
+    
+    const events = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    return filterEventsByType(events, type);
+  } catch (error) {
+    console.error('Error fetching events by type:', error);
+    return [];
+  }
+}
+
+// Client-side functions
+'use client';
 
 export async function getAllEvents() {
   try {
@@ -20,7 +49,6 @@ export async function getAllEvents() {
 
 export async function getEventsByType(type) {
   try {
-    // First try to get all events since we'll need to filter by targetAudience anyway
     const eventsRef = collection(db, COLLECTION_NAME);
     const querySnapshot = await getDocs(eventsRef);
     
@@ -29,16 +57,7 @@ export async function getEventsByType(type) {
       ...doc.data()
     }));
 
-    // Filter events that either match the type or include it in targetAudience
-    const filteredEvents = events.filter(event => 
-      event.type === type || 
-      (event.targetAudience && 
-       Array.isArray(event.targetAudience) && 
-       event.targetAudience.includes(type))
-    );
-
-    // Sort by date descending
-    return filteredEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return filterEventsByType(events, type);
   } catch (error) {
     console.error('Error fetching events by type:', error);
     return [];

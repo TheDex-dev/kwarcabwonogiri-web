@@ -1,11 +1,11 @@
-import { getArticle } from '../../../firebase/articles';
+import { getArticleServer } from '../../../firebase/articles';
 import { Metadata } from 'next';
 
 export const dynamicParams = true;
 export const revalidate = 60; // Revalidate metadata every 60 seconds
 
 export async function generateMetadata({ params }) {
-  const article = await getArticle(params.id);
+  const article = await getArticleServer(params.id);
 
   if (!article) {
     return {
