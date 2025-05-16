@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
-import { addArticle, updateArticle, deleteArticle, getArticles } from '../../firebase/articles';
+import { addArticle, updateArticle, deleteArticle, getArticles } from '../../firebase/articles.js';
 import Image from 'next/image';
 import { uploadToImgur } from '../../lib/imgur';
 
@@ -65,7 +65,7 @@ export default function ArticleEditor() {
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this article?')) return;
-    
+
     try {
       await deleteArticle(id);
       await fetchArticles();
@@ -100,13 +100,13 @@ export default function ArticleEditor() {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    
+
     const file = e.dataTransfer.files[0];
     if (!file || !file.type.startsWith('image/')) {
       alert('Please drop an image file');
       return;
     }
-    
+
     await handleImageUpload(file);
   };
 
@@ -116,14 +116,14 @@ export default function ArticleEditor() {
       alert('Please select an image file');
       return;
     }
-    
+
     await handleImageUpload(file);
   };
 
   const handleImageUpload = async (file) => {
     try {
       setUploadProgress(0);
-      
+
       // Simulate upload progress since Imgur doesn't provide progress
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
@@ -137,16 +137,16 @@ export default function ArticleEditor() {
 
       // Upload to Imgur
       const imageUrl = await uploadToImgur(file);
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
-      
+
       // Update the article data with the new image URL
       setArticleData(prev => ({
         ...prev,
         imageUrl
       }));
-      
+
       // Clear progress after a short delay
       setTimeout(() => setUploadProgress(null), 1000);
     } catch (error) {
@@ -175,7 +175,7 @@ export default function ArticleEditor() {
         await addArticle(articleDataToSubmit);
         alert('Article created successfully');
       }
-      
+
       resetForm();
       await fetchArticles();
       router.refresh();
@@ -226,13 +226,11 @@ export default function ArticleEditor() {
                 Cover Image
               </label>
               <div
-                className={`relative border-2 border-dashed rounded-lg p-4 transition-colors ${
-                  isDragging
+                className={`relative border-2 border-dashed rounded-lg p-4 transition-colors ${isDragging
                     ? 'border-primary bg-primary/5'
                     : 'border-gray-300 dark:border-gray-600'
-                } ${
-                  articleData.imageUrl ? 'h-[300px]' : 'h-[200px]'
-                }`}
+                  } ${articleData.imageUrl ? 'h-[300px]' : 'h-[200px]'
+                  }`}
                 onDragEnter={handleDragEnter}
                 onDragOver={handleDragEnter}
                 onDragLeave={handleDragLeave}
@@ -250,7 +248,7 @@ export default function ArticleEditor() {
                     </div>
                   </div>
                 )}
-                
+
                 {articleData.imageUrl ? (
                   <div className="relative w-full h-full">
                     <Image
@@ -373,8 +371,8 @@ export default function ArticleEditor() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Published Articles</h2>
           <div className="grid gap-8">
             {articles.map(article => (
-              <div 
-                key={article.id} 
+              <div
+                key={article.id}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02]"
               >
                 <div className="flex flex-col md:flex-row">
