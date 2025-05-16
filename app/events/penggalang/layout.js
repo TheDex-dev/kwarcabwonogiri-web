@@ -1,4 +1,4 @@
-import { getEventsByTypeServer } from '../../firebase/events';
+import { getEventsByTypeServer } from '../../firebase/events.server';
 
 export const dynamicParams = true;
 export const revalidate = 60; // Revalidate metadata every 60 seconds

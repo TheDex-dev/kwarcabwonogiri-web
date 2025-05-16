@@ -1,4 +1,4 @@
-import { getArticleServer } from '../../../firebase/articles';
+import { getArticleServer } from '../../../firebase/server';
 import { Metadata } from 'next';
 
 export const dynamicParams = true;

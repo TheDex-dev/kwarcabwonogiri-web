@@ -12,9 +12,6 @@ const targetAudienceOptions = [
   { value: 'penggalang', label: 'Penggalang (11-15 tahun)' },
   { value: 'penegak', label: 'Penegak (16-20 tahun)' },
   { value: 'pandega', label: 'Pandega (21-25 tahun)' },
-  { value: 'dewasa', label: 'Anggota Dewasa' },
-  { value: 'pembina', label: 'Pembina' },
-  { value: 'pelatih', label: 'Pelatih' }
 ];
 
 export default function EventEditor() {
@@ -31,7 +28,7 @@ export default function EventEditor() {
     date: '',
     location: '',
     type: 'other',
-    image: '/',
+    image: '',
     category: '',
     capacity: 0,
     registrationLink: '',
@@ -136,7 +133,7 @@ export default function EventEditor() {
       date: '',
       location: '',
       type: 'other',
-      image: '/images/hero0.jpeg',
+      image: '',
       category: '',
       capacity: '',
       registrationLink: '',
@@ -373,7 +370,7 @@ export default function EventEditor() {
                     />
                     <button
                       type="button"
-                      onClick={() => setEventData(prev => ({ ...prev, image: '/images/hero0.jpeg' }))}
+                      onClick={() => setEventData(prev => ({ ...prev, image: '' }))}
                       className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

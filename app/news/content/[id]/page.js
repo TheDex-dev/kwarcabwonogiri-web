@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getArticleById } from '../../../firebase/articles';
+import { getArticleServer } from '../../../firebase/server';
 
 function ArticleContent() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ function ArticleContent() {
   useEffect(() => {
     async function loadArticle() {
       try {
-        const articleData = await getArticleById(id);
+        const articleData = await getArticleServer(id);
         setArticle(articleData);
       } catch (error) {
         console.error('Error loading article:', error);
