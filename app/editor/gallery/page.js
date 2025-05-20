@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { addImage } from '../../firebase/gallery';
 import { uploadToImgur } from '../../lib/imgur';
+import { uploadVideo } from '../../lib/videodb';
 import Image from 'next/image';
 
 const categoryOptions = [
@@ -17,17 +18,25 @@ const categoryOptions = [
   { value: 'lainnya', label: 'Lainnya' }
 ];
 
+const ALLOWED_VIDEO_TYPES = [
+  'video/mp4',
+  'video/webm',
+  'video/ogg'
+];
+
 export default function GalleryEditor() {
   const router = useRouter();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(null);
+  const [mediaType, setMediaType] = useState(null); // 'image' or 'video'
   const [imageData, setImageData] = useState({
     title: '',
     description: '',
     category: '',
-    url: ''
+    url: '',
+    type: 'image' // default to image
   });
 
   // Protect the route
@@ -54,22 +63,32 @@ export default function GalleryEditor() {
     setIsDragging(false);
     
     const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Please drop an image file');
-      return;
+    if (!file) return;
+
+    if (file.type.startsWith('image/')) {
+      setMediaType('image');
+      await handleImageUpload(file);
+    } else if (ALLOWED_VIDEO_TYPES.includes(file.type)) {
+      setMediaType('video');
+      await handleVideoUpload(file);
+    } else {
+      alert('Please drop an image or video file');
     }
-    
-    await handleImageUpload(file);
   };
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Please select an image file');
-      return;
+    if (!file) return;
+
+    if (file.type.startsWith('image/')) {
+      setMediaType('image');
+      await handleImageUpload(file);
+    } else if (ALLOWED_VIDEO_TYPES.includes(file.type)) {
+      setMediaType('video');
+      await handleVideoUpload(file);
+    } else {
+      alert('Please select an image or video file');
     }
-    
-    await handleImageUpload(file);
   };
 
   const handleImageUpload = async (file) => {
@@ -104,6 +123,44 @@ export default function GalleryEditor() {
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image. Please try again.');
+      setUploadProgress(null);
+    }
+  };
+
+  const handleVideoUpload = async (file) => {
+    try {
+      setUploadProgress(0);
+      
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 100);
+
+      // Upload to ImageKit
+      const result = await uploadVideo(file);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      // Update the image data with the new URL and type
+      setImageData(prev => ({
+        ...prev,
+        url: result.url,
+        type: 'video',
+        thumbnailUrl: result.thumbnailUrl
+      }));
+      
+      // Clear progress after a short delay
+      setTimeout(() => setUploadProgress(null), 1000);
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      alert('Failed to upload video: ' + error.message);
       setUploadProgress(null);
     }
   };
@@ -144,7 +201,7 @@ export default function GalleryEditor() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          Add New Gallery Image
+          Add New Gallery Media
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -194,7 +251,7 @@ export default function GalleryEditor() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Image
+                Media
               </label>
               <div
                 className={`relative border-2 border-dashed rounded-lg p-4 transition-colors ${
@@ -224,16 +281,38 @@ export default function GalleryEditor() {
                 
                 {imageData.url ? (
                   <div className="relative w-full h-full">
-                    <Image
-                      src={imageData.url}
-                      alt={imageData.title || 'Gallery preview'}
-                      fill
-                      className="object-cover rounded-lg"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
+                    {mediaType === 'video' ? (
+                      <div className="relative w-full h-full">
+                        <video
+                          src={imageData.url}
+                          controls
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                        {imageData.thumbnailUrl && (
+                          <Image
+                            src={imageData.thumbnailUrl}
+                            alt={imageData.title || 'Video thumbnail'}
+                            fill
+                            className="object-cover rounded-lg opacity-0"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <Image
+                        src={imageData.url}
+                        alt={imageData.title || 'Gallery preview'}
+                        fill
+                        className="object-cover rounded-lg"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    )}
                     <button
                       type="button"
-                      onClick={() => setImageData(prev => ({ ...prev, url: '' }))}
+                      onClick={() => {
+                        setImageData(prev => ({ ...prev, url: '', type: 'image' }));
+                        setMediaType(null);
+                      }}
                       className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -246,10 +325,11 @@ export default function GalleryEditor() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <p className="text-gray-600 dark:text-gray-300 mb-2">Drag and drop an image here, or click to select</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-2">Drag and drop an image or video here, or click to select</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Supported formats: Images, MP4, WebM, OGG (max 100MB)</p>
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/*,video/mp4,video/webm,video/ogg"
                       onChange={handleFileSelect}
                       className="hidden"
                       id="image-upload"
@@ -258,7 +338,7 @@ export default function GalleryEditor() {
                       htmlFor="image-upload"
                       className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg cursor-pointer transition-colors"
                     >
-                      Choose Image
+                      Choose Media
                     </label>
                   </div>
                 )}

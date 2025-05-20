@@ -11,10 +11,16 @@ export async function getLatestArticlesServer(count = 2) {
       limit(count)
     );
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || null,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
+        date: data.date?.toDate?.()?.toISOString() || data.date
+      };
+    });
   } catch (error) {
     console.error('Error getting latest articles:', error);
     return [];
